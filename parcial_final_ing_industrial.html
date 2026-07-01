@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial Final — Ingeniería Industrial · Matemáticas II · UDI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#eef0f4;color:#1a1a18;font-size:14px;line-height:1.5}
+.wrap{max-width:800px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+.print-bar{position:sticky;top:0;z-index:50;background:#fff;border:1px solid #d8d6cc;border-radius:10px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:10px;flex-wrap:wrap;box-shadow:0 2px 8px rgba(20,30,60,.06)}
+.print-bar span{font-size:12px;color:#666;font-weight:500}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+.print-btn{font-size:13px;font-weight:700;padding:9px 18px;border-radius:7px;border:none;background:#f0a500;color:#fff;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:transform .08s}
+.print-btn:hover{background:#d49000;transform:translateY(-1px)}
+.check-btn{font-size:13px;font-weight:700;padding:9px 18px;border-radius:7px;border:none;background:#1d4ed8;color:#fff;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:transform .08s}
+.check-btn:hover{background:#1741b0;transform:translateY(-1px)}
+.check-btn:disabled{background:#9ca3af;cursor:not-allowed;transform:none}
+
+.doc-header{border:1px solid #d8d6cc;border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;background:linear-gradient(135deg,#fff 0%,#f7f9fd 100%);box-shadow:0 1px 4px rgba(20,30,60,.05)}
+.doc-title{font-size:19px;font-weight:800;color:#0f1b33;margin-bottom:4px;letter-spacing:-.01em}
+.doc-sub{font-size:13px;color:#5a6478;margin-bottom:1.1rem}
+.meta-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.meta-item{background:#fff;border-radius:8px;padding:9px 11px;border:1px solid #e3e1da}
+.meta-lbl{font-size:10px;color:#92928a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.meta-val{font-size:12.5px;font-weight:700;color:#1a1a18}
+
+.student-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.field-wrap{display:flex;flex-direction:column;gap:4px}
+.field-lbl{font-size:10px;font-weight:700;color:#5a6478;text-transform:uppercase;letter-spacing:.05em}
+.field-box{border:1.5px solid #c2c0b8;border-radius:8px;padding:9px 11px;min-height:36px;font-size:13px;color:#1a1a18;background:#fff;outline:none;cursor:text;transition:border-color .12s}
+.field-box:focus{border-color:#1d4ed8;box-shadow:0 0 0 3px rgba(29,78,216,.08)}
+.field-box:empty:before{content:attr(data-ph);color:#aaa}
+
+.intro-box{background:linear-gradient(135deg,#fff8e6,#fffbf0);border:1px solid #f0c97a;border-radius:10px;padding:13px 16px;margin-bottom:1.4rem;font-size:12.5px;color:#7a5200;line-height:1.7}
+
+.verified-banner{display:none;background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;margin-bottom:1.2rem;align-items:center;gap:8px}
+.verified-banner.show{display:flex}
+
+.table-wrap{background:#fff;border:1px solid #d8d6cc;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.4rem;box-shadow:0 1px 4px rgba(20,30,60,.04)}
+table.pts{width:100%;border-collapse:collapse;font-size:12.5px}
+table.pts th,table.pts td{border:1px solid #e6e4dc;padding:8px 10px;text-align:left}
+table.pts th{background:#f3f5fa;font-weight:700;color:#3a4258}
+table.pts td.num{text-align:center;font-weight:700;color:#1d4ed8}
+table.pts tr:last-child td{background:#f7f9fd}
+
+.sec{margin-bottom:1.8rem}
+.sec-header{display:flex;align-items:center;gap:10px;margin-bottom:.85rem;padding-bottom:8px;border-bottom:2px solid #dde1ea}
+.sec-num{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 1px 3px rgba(29,78,216,.3)}
+.sec-title{font-size:14.5px;font-weight:800;color:#0f1b33}
+.sec-pts{font-size:11px;color:#92928a;margin-left:auto;background:#f3f5fa;padding:3px 10px;border-radius:20px;font-weight:700}
+
+.q-item{background:#fff;border:1px solid #dcdad2;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:.9rem;box-shadow:0 1px 3px rgba(20,30,60,.04)}
+.q-text{font-size:13.5px;color:#1a1a18;line-height:1.7;margin-bottom:.7rem}
+
+.subpart{margin-bottom:.85rem}
+.subpart-label{font-size:12.5px;font-weight:700;color:#333d52;margin-bottom:5px;display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+
+.open-box{border:1.5px solid #c2c0b8;border-radius:8px;padding:10px 13px;min-height:65px;font-size:13px;color:#1a1a18;background:#fafaf8;outline:none;width:100%;line-height:1.65;transition:border-color .12s}
+.open-box:focus{border-color:#1d4ed8;box-shadow:0 0 0 3px rgba(29,78,216,.08);background:#fff}
+.open-box:empty:before{content:attr(data-ph);color:#aaa}
+
+/* plantillas matemáticas */
+.math-template{background:#fafbfd;border:1.5px solid #d4d9e3;border-radius:10px;padding:14px 16px;margin-bottom:9px}
+.math-line{font-size:14.5px;color:#1a1a18;line-height:3.2;font-family:'Cambria Math','Times New Roman',serif}
+.math-line+.math-line{margin-top:2px}
+.math-label{font-size:10.5px;color:#92928a;text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:6px}
+.blank{display:inline-block;width:60px;min-width:46px;border:none;border-bottom:2px solid #1d4ed8;background:#eef3ff;text-align:center;font-size:14px;font-family:'Consolas','Courier New',monospace;color:#0f1b33;padding:2px 6px;margin:0 2px;outline:none;border-radius:3px 3px 0 0;vertical-align:middle}
+.blank:focus{background:#dbeafe;border-bottom-color:#1741b0}
+.blank.wide{width:120px;min-width:90px}
+.blank.narrow{width:38px;min-width:32px;font-size:12px;padding:1px 3px}
+.blank:disabled{background:#f3f5fa;color:#5a6478;border-bottom-color:#c2c0b8;cursor:default}
+.int-limits{display:inline-flex;flex-direction:column;align-items:flex-start;vertical-align:middle;margin:0 1px;line-height:1.1}
+.int-limits .blank.narrow{width:30px;min-width:26px;font-size:10.5px;padding:0 2px;margin:1px 0}
+.fixed-limit{font-size:11px;color:#3a4258;font-family:'Cambria Math','Times New Roman',serif;padding:1px 2px}
+sup{font-size:.7em;vertical-align:super}
+sub{font-size:.7em;vertical-align:sub}
+
+/* opción múltiple */
+.mc-options{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.mc-option{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1.5px solid #d8d6cc;border-radius:8px;cursor:pointer;transition:background .12s,border-color .12s;background:#fff}
+.mc-option:hover{background:#f3f5fa;border-color:#aeb6c8}
+.mc-option input[type="radio"]{accent-color:#1d4ed8;width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.mc-letter{width:22px;height:22px;border-radius:6px;background:#eef1f6;color:#5a6478;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mc-text{font-size:13px;color:#1a1a18;font-family:'Consolas','Courier New',monospace}
+.mc-options.locked .mc-option{cursor:default;pointer-events:none}
+.mc-options.locked .mc-option:hover{background:#fff}
+.mc-options.locked .mc-option.correct-answer{border-color:#16a34a;background:#f0fdf4}
+.mc-options.locked .mc-option.wrong-selected{border-color:#dc2626;background:#fef2f2}
+.mc-result-icon{margin-left:auto;font-size:15px;font-weight:800}
+.mc-result-icon.ok{color:#16a34a}
+.mc-result-icon.bad{color:#dc2626}
+
+.auto-tag{font-size:10px;background:#dbeafe;color:#1d4ed8;padding:3px 9px;border-radius:20px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.manual-tag{font-size:10px;background:#fef3c7;color:#92620a;padding:3px 9px;border-radius:20px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+
+.pts-row{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #ececec;flex-wrap:wrap}
+.pts-lbl{font-size:11.5px;color:#888;font-weight:700}
+.pts-box{width:54px;border:1.5px solid #c2c0b8;border-radius:7px;padding:6px 8px;font-size:12.5px;text-align:center;background:#fff;outline:none;transition:border-color .12s}
+.pts-box:focus{border-color:#1d4ed8}
+.pts-total{font-size:11.5px;color:#888}
+.auto-score{font-weight:700;color:#1d4ed8}
+
+/* gráfica SVG */
+.graph-wrap{background:#fafbfd;border:1px solid #e3e6ee;border-radius:10px;padding:14px 10px 10px;margin-bottom:1rem}
+.graph-svg{width:100%;max-width:480px;height:auto;display:block;margin:0 auto}
+.graph-caption{font-size:11.5px;color:#5a6478;text-align:center;margin-top:6px;line-height:1.5;padding:0 8px}
+
+/* panel de puntaje */
+.score-panel{background:#fff;border:2px solid #1d4ed8;border-radius:14px;padding:1.2rem 1.4rem;margin-top:.6rem;margin-bottom:1.2rem;box-shadow:0 4px 16px rgba(29,78,216,.08)}
+.score-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.score-row:last-child{margin-bottom:0}
+.score-lbl{font-size:13.5px;font-weight:800;color:#0f1b33}
+.score-sub{font-size:11px;color:#92928a;margin-top:2px}
+.score-val{font-size:19px;font-weight:800;color:#1d4ed8}
+.score-val.manual{color:#92620a}
+.score-val.final{color:#16a34a;font-size:24px}
+.divider{border-top:1px solid #ececec;margin:9px 0}
+
+.obs-box{border:1.5px solid #c2c0b8;border-radius:8px;padding:9px 12px;min-height:55px;font-size:12px;color:#555;background:#f9f9f7;outline:none;width:100%}
+.obs-box:focus{border-color:#1d4ed8}
+.obs-box:empty:before{content:attr(data-ph);color:#aaa}
+
+@media print{
+  .print-bar{display:none!important}
+  body{background:#fff}
+  .wrap{padding:0}
+  .q-item,.sec,.doc-header{page-break-inside:avoid}
+  .mc-option.correct-answer,.mc-option.wrong-selected{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .math-template,.graph-wrap{break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .blank{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .auto-tag,.manual-tag{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .score-panel{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="print-bar">
+  <span>Parcial Final · Ingeniería Industrial · Matemáticas II · UDI</span>
+  <div class="btn-group">
+    <button class="check-btn" onclick="verificar()">✓ Verificar respuestas</button>
+    <button class="print-btn" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+  </div>
+</div>
+
+<div class="doc-header">
+  <div class="doc-title">Parcial Final — Aplicaciones de la integral</div>
+  <div class="doc-sub">Producción acumulada · Flujo y balance neto · Trabajo con fuerza variable · Volúmenes por discos y arandelas</div>
+  <div class="meta-row">
+    <div class="meta-item"><div class="meta-lbl">Asignatura</div><div class="meta-val">Matemáticas II</div></div>
+    <div class="meta-item"><div class="meta-lbl">Programa</div><div class="meta-val">Ingeniería Industrial</div></div>
+    <div class="meta-item"><div class="meta-lbl">Docente</div><div class="meta-val">Eder Santiago Martelo Gómez</div></div>
+    <div class="meta-item"><div class="meta-lbl">Universidad</div><div class="meta-val">UDI</div></div>
+  </div>
+</div>
+
+<div class="student-grid">
+  <div class="field-wrap" style="grid-column:1/-1">
+    <div class="field-lbl">Nombre completo</div>
+    <div class="field-box" contenteditable="true" data-ph="Escribe tu nombre completo..."></div>
+  </div>
+  <div class="field-wrap">
+    <div class="field-lbl">Código estudiantil</div>
+    <div class="field-box" contenteditable="true" data-ph=""></div>
+  </div>
+  <div class="field-wrap">
+    <div class="field-lbl">Grupo</div>
+    <div class="field-box" contenteditable="true" data-ph=""></div>
+  </div>
+  <div class="field-wrap">
+    <div class="field-lbl">Fecha</div>
+    <div class="field-box" contenteditable="true" data-ph="dd/mm/aaaa"></div>
+  </div>
+</div>
+
+<div class="verified-banner" id="verified-banner">✓ Respuestas verificadas. Las opciones de selección múltiple quedaron bloqueadas y no se pueden modificar.</div>
+
+<div class="intro-box">
+  <strong>Instrucciones.</strong> Lee cada punto con atención. En los ejercicios con desarrollo encontrarás una plantilla con la integral ya escrita: completa únicamente los espacios en blanco siguiendo el orden del procedimiento. Las preguntas conceptuales y de interpretación se responden en las cajas de texto libre. En integrales definidas no escribas +C.
+  <br><br>
+  <strong>Sobre la calificación:</strong> los campos marcados <span class="auto-tag">AUTO</span> se verifican automáticamente al hacer clic en <strong>Verificar respuestas</strong> (solo se puede usar una vez). Los marcados <span class="manual-tag">DOCENTE</span> serán calificados por el profesor.
+</div>
+
+<div class="table-wrap">
+  <table class="pts">
+    <tr><th>Punto</th><th>Tema</th><th>Puntaje</th></tr>
+    <tr><td>1</td><td>Interpretación conceptual: tasa vs acumulación</td><td class="num">0.6</td></tr>
+    <tr><td>2</td><td>Producción acumulada</td><td class="num">0.9</td></tr>
+    <tr><td>3</td><td>Flujo y balance neto</td><td class="num">1.0</td></tr>
+    <tr><td>4</td><td>Trabajo con fuerza variable</td><td class="num">0.9</td></tr>
+    <tr><td>5</td><td>Volúmenes: discos y arandelas</td><td class="num">1.6</td></tr>
+    <tr><td colspan="2" style="font-weight:700">Total</td><td class="num" style="font-weight:700">5.0</td></tr>
+  </table>
+</div>
+
+<!-- PUNTO 1 -->
+<div class="sec">
+  <div class="sec-header">
+    <div class="sec-num">1</div>
+    <div class="sec-title">Interpretación conceptual</div>
+    <div class="sec-pts">0.6 pts</div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">Responde con tus propias palabras:</div>
+    <div class="subpart">
+      <div class="subpart-label">a) Si r(t) es una tasa de producción en unidades/hora, ¿qué representa ∫ₐᵇ r(t) dt? ¿En qué unidades queda el resultado? <span class="manual-tag">DOCENTE</span></div>
+      <div class="open-box" contenteditable="true" data-ph="Escribe tu respuesta aquí..."></div>
+    </div>
+    <div class="subpart">
+      <div class="subpart-label">b) Explica la diferencia entre una tasa de producción y la producción acumulada. ¿Por qué se necesita integrar para pasar de una a la otra? <span class="manual-tag">DOCENTE</span></div>
+      <div class="open-box" contenteditable="true" data-ph="Escribe tu respuesta aquí..."></div>
+    </div>
+    <div class="pts-row"><div class="pts-lbl">Pts (docente):</div><input class="pts-box" type="text" placeholder="—"><div class="pts-total">/ 0.6</div></div>
+  </div>
+</div>
+
+<!-- PUNTO 2 -->
+<div class="sec">
+  <div class="sec-header">
+    <div class="sec-num">2</div>
+    <div class="sec-title">Producción acumulada</div>
+    <div class="sec-pts">0.9 pts</div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">Una línea de producción tiene tasa r(t) = 120 + 15t unidades/hora. Calcule la producción total durante las primeras 4 horas.</div>
+
+    <div class="subpart">
+      <div class="subpart-label">a) Plantee la integral. <span class="manual-tag">DOCENTE</span></div>
+      <div class="math-template">
+        <div class="math-label">Complete el planteamiento</div>
+        <div class="math-line">
+          Q &nbsp;=&nbsp; ∫<span class="int-limits"><input type="text" class="blank narrow" placeholder="b"><input type="text" class="blank narrow" placeholder="a"></span>&nbsp; ( <input type="text" class="blank narrow" placeholder="núm."> + <input type="text" class="blank narrow" placeholder="0,0"> t ) dt
+        </div>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">b) Calcule la producción total. <span class="auto-tag">AUTO</span></div>
+      <div class="math-template">
+        <div class="math-label">Complete el cálculo paso a paso</div>
+        <div class="math-line">
+          Antiderivada: F(t) &nbsp;=&nbsp; <input type="text" class="blank narrow" placeholder="núm."> t &nbsp;+&nbsp; <input type="text" class="blank narrow" placeholder="0,0"> t<sup>2</sup>
+        </div>
+        <div class="math-line">
+          F(4) &nbsp;=&nbsp; <input type="text" class="blank" placeholder="—">
+        </div>
+        <div class="math-line">
+          F(0) &nbsp;=&nbsp; <input type="text" class="blank" placeholder="—">
+        </div>
+        <div class="math-line">
+          Q &nbsp;=&nbsp; F(4) − F(0) &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="resultado">
+        </div>
+      </div>
+      <div class="mc-options" data-qid="p2b" data-correct="c">
+        <label class="mc-option"><input type="radio" name="p2b" value="a"><span class="mc-letter">a</span><span class="mc-text">Q = 480 unidades</span></label>
+        <label class="mc-option"><input type="radio" name="p2b" value="b"><span class="mc-letter">b</span><span class="mc-text">Q = 720 unidades</span></label>
+        <label class="mc-option"><input type="radio" name="p2b" value="c"><span class="mc-letter">c</span><span class="mc-text">Q = 600 unidades</span></label>
+        <label class="mc-option"><input type="radio" name="p2b" value="d"><span class="mc-letter">d</span><span class="mc-text">Q = 540 unidades</span></label>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">c) Interprete el resultado en contexto industrial. <span class="manual-tag">DOCENTE</span></div>
+      <div class="open-box" contenteditable="true" data-ph="Escribe tu interpretación..."></div>
+    </div>
+    <div class="pts-row">
+      <div class="pts-lbl">Pts (docente, a y c):</div><input class="pts-box" type="text" placeholder="—"><div class="pts-total">/ 0.6</div>
+      <div class="pts-lbl" style="margin-left:14px">Pts (auto, b):</div><span class="auto-score" id="auto-p2">0</span><div class="pts-total">/ 0.3</div>
+    </div>
+  </div>
+</div>
+
+<!-- PUNTO 3 -->
+<div class="sec">
+  <div class="sec-header">
+    <div class="sec-num">3</div>
+    <div class="sec-title">Flujo y balance neto</div>
+    <div class="sec-pts">1.0 pts</div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">En un depósito entra fluido a tasa qₑ(t) = 50 + 2t litros/minuto y sale a tasa qₛ(t) = 20 + t litros/minuto. Calcule el cambio neto de volumen entre t = 0 y t = 8 minutos.</div>
+
+    <div class="subpart">
+      <div class="subpart-label">a) Plantee la integral de balance neto. <span class="manual-tag">DOCENTE</span></div>
+      <div class="math-template">
+        <div class="math-label">Complete el planteamiento del balance neto</div>
+        <div class="math-line">
+          ΔV &nbsp;=&nbsp; ∫<span class="int-limits"><input type="text" class="blank narrow" placeholder="b"><input type="text" class="blank narrow" placeholder="a"></span>&nbsp; [ ( <input type="text" class="blank narrow" placeholder="núm."> + <input type="text" class="blank narrow" placeholder="núm."> t ) − ( <input type="text" class="blank narrow" placeholder="núm."> + <input type="text" class="blank narrow" placeholder="núm."> t ) ] dt
+        </div>
+        <div class="math-line">
+          ΔV &nbsp;=&nbsp; ∫<span class="int-limits"><span class="fixed-limit">8</span><span class="fixed-limit">0</span></span>&nbsp; ( <input type="text" class="blank narrow" placeholder="núm."> + <input type="text" class="blank narrow" placeholder="núm."> t ) dt
+        </div>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">b) Calcule el cambio neto. <span class="auto-tag">AUTO</span></div>
+      <div class="math-template">
+        <div class="math-label">Complete el cálculo paso a paso</div>
+        <div class="math-line">
+          Antiderivada: F(t) &nbsp;=&nbsp; <input type="text" class="blank narrow" placeholder="núm."> t &nbsp;+&nbsp; <input type="text" class="blank narrow" placeholder="0,0"> t<sup>2</sup>
+        </div>
+        <div class="math-line">
+          F(8) &nbsp;=&nbsp; <input type="text" class="blank" placeholder="—">
+        </div>
+        <div class="math-line">
+          F(0) &nbsp;=&nbsp; <input type="text" class="blank" placeholder="—">
+        </div>
+        <div class="math-line">
+          ΔV &nbsp;=&nbsp; F(8) − F(0) &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="resultado">
+        </div>
+      </div>
+      <div class="mc-options" data-qid="p3b" data-correct="b">
+        <label class="mc-option"><input type="radio" name="p3b" value="a"><span class="mc-letter">a</span><span class="mc-text">ΔV = 240 litros</span></label>
+        <label class="mc-option"><input type="radio" name="p3b" value="b"><span class="mc-letter">b</span><span class="mc-text">ΔV = 272 litros</span></label>
+        <label class="mc-option"><input type="radio" name="p3b" value="c"><span class="mc-letter">c</span><span class="mc-text">ΔV = 320 litros</span></label>
+        <label class="mc-option"><input type="radio" name="p3b" value="d"><span class="mc-letter">d</span><span class="mc-text">ΔV = 200 litros</span></label>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">c) Interprete el resultado: ¿aumenta o disminuye el volumen del depósito? ¿Cuánto? <span class="manual-tag">DOCENTE</span></div>
+      <div class="open-box" contenteditable="true" data-ph="Escribe tu interpretación..."></div>
+    </div>
+    <div class="pts-row">
+      <div class="pts-lbl">Pts (docente, a y c):</div><input class="pts-box" type="text" placeholder="—"><div class="pts-total">/ 0.65</div>
+      <div class="pts-lbl" style="margin-left:14px">Pts (auto, b):</div><span class="auto-score" id="auto-p3">0</span><div class="pts-total">/ 0.35</div>
+    </div>
+  </div>
+</div>
+
+<!-- PUNTO 4 -->
+<div class="sec">
+  <div class="sec-header">
+    <div class="sec-num">4</div>
+    <div class="sec-title">Trabajo con fuerza variable</div>
+    <div class="sec-pts">0.9 pts</div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">Una fuerza variable está dada por F(x) = 40 + 5x newtons. Calcule el trabajo realizado al mover un objeto de x = 0 a x = 6 metros.</div>
+
+    <div class="subpart">
+      <div class="subpart-label">a) Plantee la integral de trabajo. <span class="manual-tag">DOCENTE</span></div>
+      <div class="math-template">
+        <div class="math-label">Complete el planteamiento</div>
+        <div class="math-line">
+          W &nbsp;=&nbsp; ∫<span class="int-limits"><input type="text" class="blank narrow" placeholder="b"><input type="text" class="blank narrow" placeholder="a"></span>&nbsp; ( <input type="text" class="blank narrow" placeholder="núm."> + <input type="text" class="blank narrow" placeholder="núm."> x ) dx
+        </div>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">b) Calcule el trabajo. <span class="auto-tag">AUTO</span></div>
+      <div class="math-template">
+        <div class="math-label">Complete el cálculo paso a paso</div>
+        <div class="math-line">
+          Antiderivada: F(x) &nbsp;=&nbsp; <input type="text" class="blank narrow" placeholder="núm."> x &nbsp;+&nbsp; <input type="text" class="blank narrow" placeholder="0,0"> x<sup>2</sup>
+        </div>
+        <div class="math-line">
+          F(6) &nbsp;=&nbsp; <input type="text" class="blank" placeholder="—">
+        </div>
+        <div class="math-line">
+          F(0) &nbsp;=&nbsp; <input type="text" class="blank" placeholder="—">
+        </div>
+        <div class="math-line">
+          W &nbsp;=&nbsp; F(6) − F(0) &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="resultado">
+        </div>
+      </div>
+      <div class="mc-options" data-qid="p4b" data-correct="a">
+        <label class="mc-option"><input type="radio" name="p4b" value="a"><span class="mc-letter">a</span><span class="mc-text">W = 330 J</span></label>
+        <label class="mc-option"><input type="radio" name="p4b" value="b"><span class="mc-letter">b</span><span class="mc-text">W = 240 J</span></label>
+        <label class="mc-option"><input type="radio" name="p4b" value="c"><span class="mc-letter">c</span><span class="mc-text">W = 420 J</span></label>
+        <label class="mc-option"><input type="radio" name="p4b" value="d"><span class="mc-letter">d</span><span class="mc-text">W = 300 J</span></label>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">c) Interprete el resultado con unidades y contexto. <span class="manual-tag">DOCENTE</span></div>
+      <div class="open-box" contenteditable="true" data-ph="Escribe tu interpretación..."></div>
+    </div>
+    <div class="pts-row">
+      <div class="pts-lbl">Pts (docente, a y c):</div><input class="pts-box" type="text" placeholder="—"><div class="pts-total">/ 0.6</div>
+      <div class="pts-lbl" style="margin-left:14px">Pts (auto, b):</div><span class="auto-score" id="auto-p4">0</span><div class="pts-total">/ 0.3</div>
+    </div>
+  </div>
+</div>
+
+<!-- PUNTO 5 -->
+<div class="sec">
+  <div class="sec-header">
+    <div class="sec-num">5</div>
+    <div class="sec-title">Volúmenes: discos y arandelas</div>
+    <div class="sec-pts">1.6 pts</div>
+  </div>
+
+  <!-- 5a: discos -->
+  <div class="q-item">
+    <div class="q-text"><strong>5a.</strong> La región bajo la curva y = √x, para 0 ≤ x ≤ 4, gira alrededor del eje x. Calcule el volumen del sólido generado (método de discos).</div>
+
+    <div class="graph-wrap">
+      <canvas id="canvas-disco" width="700" height="300" style="width:100%;max-width:700px;display:block;margin:0 auto"></canvas>
+      <div class="graph-caption">Izquierda: región bajo y = √x en [0,4] (área azul). Derecha: sólido de revolución generado al girar alrededor del eje x — cada sección transversal es un <strong>disco</strong> de radio r(x) = √x.</div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">a) Plantee y calcule el volumen por discos. <span class="auto-tag">AUTO</span></div>
+      <div class="math-template">
+        <div class="math-label">Método de discos: V = π ∫ [f(x)]² dx</div>
+        <div class="math-line">
+          V &nbsp;=&nbsp; π ∫<span class="int-limits"><span class="fixed-limit">4</span><span class="fixed-limit">0</span></span>&nbsp; ( √x )<sup>2</sup> dx &nbsp;=&nbsp; π ∫<span class="int-limits"><span class="fixed-limit">4</span><span class="fixed-limit">0</span></span>&nbsp; <input type="text" class="blank narrow" placeholder="expr"> dx
+        </div>
+        <div class="math-line">
+          Antiderivada: G(x) &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="—">
+        </div>
+        <div class="math-line">
+          V &nbsp;=&nbsp; π [ G(4) − G(0) ] &nbsp;=&nbsp; π · <input type="text" class="blank" placeholder="—"> &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="resultado">
+        </div>
+      </div>
+      <div class="mc-options" data-qid="p5a" data-correct="b">
+        <label class="mc-option"><input type="radio" name="p5a" value="a"><span class="mc-letter">a</span><span class="mc-text">V = 4π u³</span></label>
+        <label class="mc-option"><input type="radio" name="p5a" value="b"><span class="mc-letter">b</span><span class="mc-text">V = 8π u³</span></label>
+        <label class="mc-option"><input type="radio" name="p5a" value="c"><span class="mc-letter">c</span><span class="mc-text">V = 16π u³</span></label>
+        <label class="mc-option"><input type="radio" name="p5a" value="d"><span class="mc-letter">d</span><span class="mc-text">V = 2π u³</span></label>
+      </div>
+    </div>
+    <div class="pts-row">
+      <div class="pts-lbl">Pts (auto, a):</div><span class="auto-score" id="auto-p5a">0</span><div class="pts-total">/ 0.5</div>
+    </div>
+  </div>
+
+  <!-- 5b: arandelas -->
+  <div class="q-item">
+    <div class="q-text"><strong>5b.</strong> La región entre y = 3 (radio externo) e y = x (radio interno), para 0 ≤ x ≤ 2, gira alrededor del eje x. Calcule el volumen por el método de arandelas.</div>
+
+    <div class="graph-wrap">
+      <canvas id="canvas-arandela" width="700" height="300" style="width:100%;max-width:700px;display:block;margin:0 auto"></canvas>
+      <div class="graph-caption">Izquierda: región entre y=3 (azul) e y=x (verde) en [0,2]. Derecha: sólido de revolución — cada sección es una <strong>arandela</strong> con radio externo R=3 e interno r=x. El hueco central (blanco) es el espacio vacío.</div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">a) Plantee y calcule el volumen por arandelas. <span class="auto-tag">AUTO</span></div>
+      <div class="math-template">
+        <div class="math-label">Método de arandelas: V = π ∫ [R(x)² − r(x)²] dx</div>
+        <div class="math-line">
+          V &nbsp;=&nbsp; π ∫<span class="int-limits"><span class="fixed-limit">2</span><span class="fixed-limit">0</span></span>&nbsp; ( <input type="text" class="blank narrow" placeholder="R²"> − <input type="text" class="blank narrow" placeholder="r²"> ) dx &nbsp;=&nbsp; π ∫<span class="int-limits"><span class="fixed-limit">2</span><span class="fixed-limit">0</span></span>&nbsp; ( <input type="text" class="blank wide" placeholder="simplifique"> ) dx
+        </div>
+        <div class="math-line">
+          Antiderivada: G(x) &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="—">
+        </div>
+        <div class="math-line">
+          V &nbsp;=&nbsp; π [ G(2) − G(0) ] &nbsp;=&nbsp; π · <input type="text" class="blank" placeholder="—"> &nbsp;=&nbsp; <input type="text" class="blank wide" placeholder="resultado">
+        </div>
+      </div>
+      <div class="mc-options" data-qid="p5b" data-correct="c">
+        <label class="mc-option"><input type="radio" name="p5b" value="a"><span class="mc-letter">a</span><span class="mc-text">V = 18π u³</span></label>
+        <label class="mc-option"><input type="radio" name="p5b" value="b"><span class="mc-letter">b</span><span class="mc-text">V = 50π/3 u³</span></label>
+        <label class="mc-option"><input type="radio" name="p5b" value="c"><span class="mc-letter">c</span><span class="mc-text">V = 46π/3 u³</span></label>
+        <label class="mc-option"><input type="radio" name="p5b" value="d"><span class="mc-letter">d</span><span class="mc-text">V = 16π u³</span></label>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <div class="subpart-label">b) ¿Cuál es la diferencia entre el método de discos y el de arandelas? ¿Cuándo se usa cada uno? <span class="manual-tag">DOCENTE</span></div>
+      <div class="open-box" contenteditable="true" data-ph="Escribe tu respuesta aquí..."></div>
+    </div>
+    <div class="pts-row">
+      <div class="pts-lbl">Pts (auto, a):</div><span class="auto-score" id="auto-p5b">0</span><div class="pts-total">/ 0.6</div>
+      <div class="pts-lbl" style="margin-left:14px">Pts (docente, b):</div><input class="pts-box" type="text" placeholder="—"><div class="pts-total">/ 0.5</div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL DE PUNTAJE -->
+<div class="score-panel">
+  <div class="score-row">
+    <div><div class="score-lbl">Puntaje automático (opción múltiple)</div><div class="score-sub">Calculado al verificar — sobre 2.05 pts</div></div>
+    <div class="score-val" id="total-auto">0.00 / 2.05</div>
+  </div>
+  <div class="divider"></div>
+  <div class="score-row">
+    <div><div class="score-lbl">Puntaje manual (docente)</div><div class="score-sub">Planteamientos, interpretaciones y explicaciones — sobre 2.95 pts</div></div>
+    <div class="score-val manual" id="total-manual">— / 2.95</div>
+  </div>
+  <div class="divider"></div>
+  <div class="score-row">
+    <div><div class="score-lbl">Total estimado</div><div class="score-sub">Auto + manual, sobre 5.0 pts</div></div>
+    <div class="score-val final" id="total-final">— / 5.0</div>
+  </div>
+</div>
+
+<div class="q-item" style="margin-top:.75rem">
+  <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">Observaciones del docente</div>
+  <div class="obs-box" contenteditable="true" data-ph="Escribe aquí las observaciones o retroalimentación..."></div>
+</div>
+
+</div>
+
+<script>
+// ─── UTILIDADES CANVAS ──────────────────────────────────────────────
+function drawAxes2D(ctx, ox, oy, W, H, xmax, ymax, labels){
+  ctx.strokeStyle='#5a6478'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ox,oy+H); ctx.lineTo(ox+W,oy+H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox,oy+H); ctx.lineTo(ox,oy); ctx.stroke();
+  ctx.fillStyle='#5a6478'; ctx.font='12px Segoe UI,Arial';
+  ctx.fillText('x',ox+W+5,oy+H+5);
+  ctx.fillText('y',ox-8,oy-5);
+  if(labels) labels.forEach(([val,axis])=>{
+    if(axis==='x'){
+      const px=ox+val/xmax*W;
+      ctx.setLineDash([3,3]); ctx.strokeStyle='#bbb'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(px,oy+H); ctx.lineTo(px,oy); ctx.stroke();
+      ctx.setLineDash([]); ctx.fillStyle='#333';
+      ctx.fillText(val,px-4,oy+H+14);
+    }
+  });
+  ctx.fillStyle='#333'; ctx.fillText('0',ox-12,oy+H+14);
+}
+
+// Perspectiva isométrica simple: (x,y,z) → (px,py) canvas
+function iso(x, y, z, cx, cy, sx, sy, sz){
+  // eje x apunta derecha-abajo, eje z apunta arriba, eje y apunta izquierda-abajo
+  const px = cx + x*sx - y*0.5*sy;
+  const py = cy - z*sz + y*0.3*sy + x*0.18*sx;
+  return [px, py];
+}
+
+// Elipse en perspectiva (círculo girado alrededor eje x: centro cx, radio r, posición x)
+function drawEllipseIso(ctx, xpos, r, cx0, cy0, sx, sy, sz, fillStyle, strokeStyle, alpha){
+  const steps = 48;
+  ctx.beginPath();
+  for(let i=0;i<=steps;i++){
+    const a = (i/steps)*Math.PI*2;
+    const [px,py] = iso(xpos, r*Math.cos(a), r*Math.sin(a), cx0, cy0, sx, sy, sz);
+    i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+  }
+  ctx.closePath();
+  if(fillStyle){ ctx.globalAlpha=alpha||1; ctx.fillStyle=fillStyle; ctx.fill(); ctx.globalAlpha=1; }
+  if(strokeStyle){ ctx.strokeStyle=strokeStyle; ctx.lineWidth=1.2; ctx.stroke(); }
+}
+
+// ─── GRÁFICA 1: DISCOS (y=sqrt(x), [0,4]) ───────────────────────────
+(function(){
+  const canvas = document.getElementById('canvas-disco');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+
+  // --- Panel izquierdo: región 2D ---
+  const L=W/2, pad=40;
+  const ox=pad, oy=pad, pw=L-pad*1.8, ph=H-pad*2;
+  const xmax=4.5, ymax=2.5;
+  const tx = v => ox + v/xmax*pw;
+  const ty = v => oy+ph - v/ymax*ph;
+
+  // área bajo curva
+  ctx.beginPath();
+  ctx.moveTo(tx(0),ty(0));
+  for(let x=0;x<=4;x+=0.05) ctx.lineTo(tx(x), ty(Math.sqrt(x)));
+  ctx.lineTo(tx(4),ty(0));
+  ctx.closePath();
+  ctx.fillStyle='rgba(29,78,216,0.15)'; ctx.fill();
+
+  // curva y=sqrt(x)
+  ctx.beginPath();
+  ctx.moveTo(tx(0),ty(0));
+  for(let x=0.01;x<=4;x+=0.05) ctx.lineTo(tx(x),ty(Math.sqrt(x)));
+  ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5; ctx.stroke();
+
+  // label curva
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('y = √x', tx(3.5)+4, ty(Math.sqrt(3.5))-6);
+
+  // disco representativo en x=2.5
+  const xd=2.5, rd=Math.sqrt(xd);
+  ctx.setLineDash([4,3]);
+  ctx.strokeStyle='#f0a500'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(tx(xd),ty(-rd)); ctx.lineTo(tx(xd),ty(rd)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(240,165,0,0.18)';
+  ctx.fillRect(tx(xd)-3, ty(rd), 6, ty(-rd)-ty(rd));
+  ctx.fillStyle='#f0a500'; ctx.font='11px Segoe UI,Arial';
+  ctx.fillText('r=√x', tx(xd)+5, ty(rd/2));
+
+  // ejes 2D
+  ctx.strokeStyle='#5a6478'; ctx.lineWidth=1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox,oy+ph); ctx.lineTo(ox+pw+15,oy+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox,oy+ph); ctx.lineTo(ox,oy-10); ctx.stroke();
+  ctx.fillStyle='#5a6478'; ctx.font='12px Segoe UI,Arial';
+  ctx.fillText('x',ox+pw+18,oy+ph+4);
+  ctx.fillText('y',ox-10,oy-12);
+  ctx.fillStyle='#333';
+  ctx.fillText('0',ox-14,oy+ph+14);
+  ctx.fillText('4',tx(4)-4,oy+ph+14);
+  // línea guía x=4
+  ctx.setLineDash([3,3]); ctx.strokeStyle='#bbb'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(tx(4),oy+ph); ctx.lineTo(tx(4),ty(2)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // título panel izq
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('Región (2D)', ox+pw/2-35, oy-10);
+  ctx.fillStyle='#92928a'; ctx.font='11px Segoe UI,Arial';
+  ctx.fillText('Al girar → sólido', ox+pw/2-38, oy+ph+28);
+
+  // flecha al panel derecho
+  ctx.strokeStyle='#888'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(L-8,H/2); ctx.lineTo(L+8,H/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(L+4,H/2-5); ctx.lineTo(L+10,H/2); ctx.lineTo(L+4,H/2+5); ctx.stroke();
+
+  // --- Panel derecho: sólido 3D perspectiva ---
+  const cx0=L+50, cy0=H/2+20;
+  const sx=55, sy=38, sz=42;
+
+  // Dibujar discos de atrás a adelante (x=4 a x=0)
+  const steps=20;
+  for(let i=steps;i>=0;i--){
+    const x=i/steps*4;
+    const r=Math.sqrt(x);
+    const alpha=0.25+0.35*(x/4);
+    // cara frontal del disco
+    drawEllipseIso(ctx,x,r,cx0,cy0,sx,sy,sz,'rgba(29,78,216,'+alpha+')',null,1);
+    // borde
+    drawEllipseIso(ctx,x,r,cx0,cy0,sx,sy,sz,null,'rgba(29,78,216,0.5)',1);
+  }
+
+  // cara delantera final (x=0, punta)
+  const [p0x,p0y]=iso(0,0,0,cx0,cy0,sx,sy,sz);
+  ctx.beginPath(); ctx.arc(p0x,p0y,2.5,0,Math.PI*2);
+  ctx.fillStyle='#1d4ed8'; ctx.fill();
+
+  // eje x sobre el sólido
+  const [ax0,ay0]=iso(-0.3,0,0,cx0,cy0,sx,sy,sz);
+  const [ax1,ay1]=iso(4.5,0,0,cx0,cy0,sx,sy,sz);
+  ctx.strokeStyle='#5a6478'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ax0,ay0); ctx.lineTo(ax1,ay1); ctx.stroke();
+  ctx.fillStyle='#5a6478'; ctx.font='12px Segoe UI,Arial';
+  ctx.fillText('x',ax1+4,ay1+4);
+
+  // etiquetas x=0 y x=4
+  const [lx0,ly0]=iso(0,0,0,cx0,cy0,sx,sy,sz);
+  const [lx4,ly4]=iso(4,0,0,cx0,cy0,sx,sy,sz);
+  ctx.fillStyle='#333'; ctx.font='11px Segoe UI,Arial';
+  ctx.fillText('x=0',lx0-10,ly0+16);
+  ctx.fillText('x=4',lx4-10,ly4+16);
+
+  // disco destacado en x=2.5 (naranja)
+  drawEllipseIso(ctx,2.5,Math.sqrt(2.5),cx0,cy0,sx,sy,sz,'rgba(240,165,0,0.3)','#f0a500',1);
+  const [ldx,ldy]=iso(2.5,Math.sqrt(2.5)*0.7,0,cx0,cy0,sx,sy,sz);
+  ctx.fillStyle='#c07000'; ctx.font='bold 11px Segoe UI,Arial';
+  ctx.fillText('disco',ldx+4,ldy-4);
+
+  // título panel der
+  const [tpx,tpy]=iso(2,0,0,cx0,cy0,sx,sy,sz);
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('Sólido de revolución (3D)',L+10,oy-10);
+})();
+
+// ─── GRÁFICA 2: ARANDELAS (R=3, r=x, [0,2]) ─────────────────────────
+(function(){
+  const canvas = document.getElementById('canvas-arandela');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+
+  const L=W/2, pad=40;
+  const ox=pad, oy=pad, pw=L-pad*1.8, ph=H-pad*2;
+  const xmax=3.2, ymax=3.8;
+  const tx = v => ox + v/xmax*pw;
+  const ty = v => oy+ph - v/ymax*ph;
+
+  // área entre y=3 e y=x de 0 a 2
+  ctx.beginPath();
+  ctx.moveTo(tx(0),ty(3));
+  ctx.lineTo(tx(2),ty(3));
+  ctx.lineTo(tx(2),ty(2));
+  ctx.lineTo(tx(0),ty(0));
+  ctx.closePath();
+  ctx.fillStyle='rgba(240,165,0,0.22)'; ctx.fill();
+
+  // y=3 (radio externo)
+  ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(tx(0),ty(3)); ctx.lineTo(tx(xmax-0.1),ty(3)); ctx.stroke();
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('y = 3 (R externo)',tx(2.2),ty(3)-6);
+
+  // y=x (radio interno)
+  ctx.strokeStyle='#16a34a'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(tx(0),ty(0)); ctx.lineTo(tx(3),ty(3)); ctx.stroke();
+  ctx.fillStyle='#16a34a'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('y = x (r interno)',tx(2.2),ty(2.2)-10);
+
+  // arandela representativa en x=1.2
+  const xd=1.2, RR=3, rr=xd;
+  ctx.setLineDash([4,3]); ctx.strokeStyle='#bbb'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(tx(xd),oy); ctx.lineTo(tx(xd),oy+ph); ctx.stroke();
+  ctx.setLineDash([]);
+  // flechas R y r
+  ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(tx(xd),ty(0)); ctx.lineTo(tx(xd),ty(RR)); ctx.stroke();
+  ctx.fillStyle='rgba(29,78,216,0.15)';
+  ctx.fillRect(tx(xd)-3,ty(RR),6,ty(0)-ty(RR));
+  ctx.strokeStyle='#16a34a'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(tx(xd),ty(0)); ctx.lineTo(tx(xd),ty(rr)); ctx.stroke();
+  ctx.fillStyle='white';
+  ctx.fillRect(tx(xd)-3,ty(rr),6,ty(0)-ty(rr));
+  ctx.fillStyle='#1d4ed8'; ctx.font='11px Segoe UI,Arial';
+  ctx.fillText('R',tx(xd)+5,ty(RR/2));
+  ctx.fillStyle='#16a34a';
+  ctx.fillText('r',tx(xd)+5,ty(rr/2)-4);
+
+  // ejes 2D
+  ctx.strokeStyle='#5a6478'; ctx.lineWidth=1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox,oy+ph); ctx.lineTo(ox+pw+15,oy+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox,oy+ph); ctx.lineTo(ox,oy-10); ctx.stroke();
+  ctx.fillStyle='#5a6478'; ctx.font='12px Segoe UI,Arial';
+  ctx.fillText('x',ox+pw+18,oy+ph+4); ctx.fillText('y',ox-10,oy-12);
+  ctx.fillStyle='#333';
+  ctx.fillText('0',ox-14,oy+ph+14);
+  ctx.fillText('2',tx(2)-4,oy+ph+14);
+  ctx.fillText('3',ox-16,ty(3)+4);
+  // línea guía x=2
+  ctx.setLineDash([3,3]); ctx.strokeStyle='#bbb'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(tx(2),oy+ph); ctx.lineTo(tx(2),ty(3.5)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('Región (2D)', ox+pw/2-35, oy-10);
+  ctx.fillStyle='#92928a'; ctx.font='11px Segoe UI,Arial';
+  ctx.fillText('Al girar → sólido con hueco',ox+pw/2-58,oy+ph+28);
+
+  // flecha
+  ctx.strokeStyle='#888'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(L-8,H/2); ctx.lineTo(L+8,H/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(L+4,H/2-5); ctx.lineTo(L+10,H/2); ctx.lineTo(L+4,H/2+5); ctx.stroke();
+
+  // --- Panel 3D arandela ---
+  const cx0=L+55, cy0=H/2+25;
+  const sx=65, sy=40, sz=32;
+
+  // Dibujar arandelas de x=2 a x=0 (de atrás a adelante)
+  const steps=20;
+  for(let i=steps;i>=0;i--){
+    const x=i/steps*2;
+    const R=3, r=x;
+    const alpha=0.2+0.3*(x/2);
+
+    // cara exterior (R externo, azul)
+    drawEllipseIso(ctx,x,R,cx0,cy0,sx,sy,sz,'rgba(29,78,216,'+(alpha+0.1)+')',null,1);
+    // hueco interior (blanco para tapar)
+    drawEllipseIso(ctx,x,r,cx0,cy0,sx,sy,sz,'white',null,1);
+    // borde exterior
+    drawEllipseIso(ctx,x,R,cx0,cy0,sx,sy,sz,null,'rgba(29,78,216,0.6)',1);
+    // borde interior (verde)
+    if(r>0.05) drawEllipseIso(ctx,x,r,cx0,cy0,sx,sy,sz,null,'rgba(22,163,74,0.6)',1);
+  }
+
+  // eje x
+  const [ax0,ay0]=iso(-0.2,0,0,cx0,cy0,sx,sy,sz);
+  const [ax1,ay1]=iso(2.6,0,0,cx0,cy0,sx,sy,sz);
+  ctx.strokeStyle='#5a6478'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ax0,ay0); ctx.lineTo(ax1,ay1); ctx.stroke();
+  ctx.fillStyle='#5a6478'; ctx.font='12px Segoe UI,Arial';
+  ctx.fillText('x',ax1+4,ay1+4);
+
+  const [lx0,ly0]=iso(0,0,0,cx0,cy0,sx,sy,sz);
+  const [lx2,ly2]=iso(2,0,0,cx0,cy0,sx,sy,sz);
+  ctx.fillStyle='#333'; ctx.font='11px Segoe UI,Arial';
+  ctx.fillText('x=0',lx0-8,ly0+16);
+  ctx.fillText('x=2',lx2-8,ly2+16);
+
+  // etiquetas R y r en la arandela de x=1
+  const [eRx,eRy]=iso(1,3*0.7,3*0.7,cx0,cy0,sx,sy,sz);
+  const [erx,ery]=iso(1,1*0.7,1*0.7,cx0,cy0,sx,sy,sz);
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 11px Segoe UI,Arial';
+  ctx.fillText('R=3',eRx+2,eRy-4);
+  ctx.fillStyle='#16a34a';
+  ctx.fillText('r=x',erx+2,ery-4);
+
+  // título
+  ctx.fillStyle='#1d4ed8'; ctx.font='bold 12px Segoe UI,Arial';
+  ctx.fillText('Sólido con hueco (arandelas)',L+10,oy-10);
+})();
+</script>
+
+<script>
+const groupPoints = { p2b:0.3, p3b:0.35, p4b:0.3, p5a:0.5, p5b:0.6 };
+const sectionMap  = { p2b:'auto-p2', p3b:'auto-p3', p4b:'auto-p4', p5a:'auto-p5a', p5b:'auto-p5b' };
+let yaVerificado = false;
+
+function verificar(){
+  if(yaVerificado) return;
+
+  const allGroups = document.querySelectorAll('.mc-options');
+  let grandAuto = 0;
+
+  allGroups.forEach(group => {
+    const qid     = group.getAttribute('data-qid');
+    const correct = group.getAttribute('data-correct');
+    const selected = group.querySelector('input[type="radio"]:checked');
+    const selectedValue = selected ? selected.value : null;
+    const isCorrect = selectedValue === correct;
+
+    group.querySelectorAll('.mc-option').forEach(opt => {
+      const radio = opt.querySelector('input[type="radio"]');
+      opt.classList.remove('correct-answer','wrong-selected');
+      const old = opt.querySelector('.mc-result-icon');
+      if(old) old.remove();
+      if(radio.value === correct){
+        opt.classList.add('correct-answer');
+        const icon = document.createElement('span');
+        icon.className='mc-result-icon ok'; icon.textContent='✓';
+        opt.appendChild(icon);
+      } else if(radio.value === selectedValue){
+        opt.classList.add('wrong-selected');
+        const icon = document.createElement('span');
+        icon.className='mc-result-icon bad'; icon.textContent='✗';
+        opt.appendChild(icon);
+      }
+    });
+    group.classList.add('locked');
+
+    const pts = isCorrect ? (groupPoints[qid]||0) : 0;
+    grandAuto += pts;
+
+    // actualizar subtotal de la sección
+    const secId = sectionMap[qid];
+    if(secId) document.getElementById(secId).textContent = pts.toFixed(2);
+  });
+
+  document.getElementById('total-auto').textContent = grandAuto.toFixed(2) + ' / 2.05';
+  actualizarTotal(grandAuto);
+
+  yaVerificado = true;
+  const btn = document.querySelector('.check-btn');
+  btn.disabled = true;
+  btn.textContent = '✓ Respuestas verificadas';
+  document.getElementById('verified-banner').classList.add('show');
+  document.querySelectorAll('.blank').forEach(b => { b.disabled = true; });
+}
+
+function actualizarTotal(autoScore){
+  let manualScore = 0, anyManual = false;
+  document.querySelectorAll('.pts-row .pts-box').forEach(box => {
+    const v = parseFloat(box.value);
+    if(!isNaN(v)){ manualScore += v; anyManual = true; }
+  });
+  document.getElementById('total-manual').textContent = (anyManual ? manualScore.toFixed(2) : '—') + ' / 2.95';
+  const finalScore = autoScore + (anyManual ? manualScore : 0);
+  document.getElementById('total-final').textContent = finalScore.toFixed(2) + ' / 5.0';
+}
+
+document.addEventListener('input', function(e){
+  if(e.target.classList && e.target.classList.contains('pts-box')){
+    const autoText = document.getElementById('total-auto').textContent;
+    const autoVal = parseFloat(autoText)||0;
+    actualizarTotal(autoVal);
+  }
+});
+</script>
+</body>
+</html>
